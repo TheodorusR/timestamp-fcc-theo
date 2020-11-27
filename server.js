@@ -24,16 +24,30 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-app.get("/api/timestamp/:date", function(req,res,next) {
-  req.time = new Date(req.params.date);
+app.get("/api/timestamp/:date",
+function(req,res,next) {
+  if (isNaN(Number(req.params.date))) {
+    //input is in date format
+    req.time = new Date(req.params.date);
+  } else {
+    //input is in miliseconds format
+    req.time = new Date(Number(req.params.date));
+  }
   next();
 },
 function (req, res) {
   if (isNaN(req.time.getTime())) {
-    res.json({ error : req.time });
+    //invalid date format
+    res.json({ error : "Invalid Date" });
   } else {
     res.json({"unix" : req.time.getTime(), "utc" : req.time.toUTCString()});
   }
+});
+
+app.get("/api/timestamp", function (req, res) {
+  //path if input is empty, return current time
+  req.time = new Date();
+  res.json({"unix": req.time.getTime(), "utc": req.time.toUTCString()});
 });
 
 
