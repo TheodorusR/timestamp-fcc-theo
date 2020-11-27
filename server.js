@@ -29,10 +29,10 @@ app.get("/api/timestamp/:date", function(req,res,next) {
   next();
 },
 function (req, res) {
-  if (isNaN(time.getTime())) {
-    res.json({ error : time });
+  if (isNaN(req.time.getTime())) {
+    res.json({ error : req.time });
   } else {
-    res.json({"unix" : time.getTime(), "utc" : time.toUTCString()});
+    res.json({"unix" : req.time.getTime(), "utc" : req.time.toUTCString()});
   }
 });
 
